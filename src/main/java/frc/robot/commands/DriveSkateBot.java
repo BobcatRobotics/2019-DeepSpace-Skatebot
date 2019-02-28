@@ -12,17 +12,17 @@ import frc.robot.OI;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveWithJoysticks extends Command {
+public class DriveSkateBot extends Command {
 	
-	public DriveWithJoysticks() {
+	public DriveSkateBot() {
 		super();
 	}
 
 	@Override
 	protected void execute() {
 		// Driving
-		double left = OI.leftStick.getRawAxis(Joystick.AxisType.kY.value);
-		double right = OI.rightStick.getRawAxis(Joystick.AxisType.kY.value);
+		double left = OI.gamePad.getRawAxis(Joystick.AxisType.kY.value);
+		double right = OI.gamePad.getRawAxis(Joystick.AxisType.kTwist.value);
 		if (Math.abs(right) < 0.02) {
 			right = 0.0;
 			//done to prevent motor wear, in case of joystick doesn't center
