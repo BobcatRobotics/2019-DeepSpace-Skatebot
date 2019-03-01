@@ -1,2 +1,2 @@
-# 2019-DeepSpace
-Deep Space Robot Code
+# 2019-DeepSpace-Skatebot
+Deep Space Robot Code - Customized for the skatebot
