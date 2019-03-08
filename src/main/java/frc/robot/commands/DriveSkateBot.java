@@ -16,6 +16,7 @@ public class DriveSkateBot extends Command {
 	
 	public DriveSkateBot() {
 		super();
+		requires(OI.driveTrain);
 	}
 
 	@Override
