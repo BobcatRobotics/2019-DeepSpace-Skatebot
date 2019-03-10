@@ -45,7 +45,7 @@ public class OI {
  // public static PanelIntake panel = new PanelIntake();
 
   //Cargo Roller
-  public static CargoRoller cargo = new CargoRoller();
+  // public static CargoRoller cargo = new CargoRoller();
 
   //Peg leg
   //public static PegLeg pegleg = new PegLeg();
@@ -83,9 +83,9 @@ public class OI {
 
     // trigShifter.whenActive(new ShiftHigh());
     // trigShifter.whenInactive(new ShiftLow());
-    btnRollerIn.whileHeld(new CargoRollerIn());
-    btnRollerOut.whileHeld(new CargoRollerOut());
-    btnTargetRobot.whenPressed(new TargetSkateBot());
+    // btnRollerIn.whileHeld(new CargoRollerIn());
+    // btnRollerOut.whileHeld(new CargoRollerOut());
+    // btnTargetRobot.whenPressed(new TargetSkateBot());
     // btnPanelHold.whenPressed(new PanelIntakeHoldPanel());
     // btnPanelRelease.whenPressed(new PanelIntakeReleasePanel());
     // btnWristStow.whenPressed(new WristStowed());
