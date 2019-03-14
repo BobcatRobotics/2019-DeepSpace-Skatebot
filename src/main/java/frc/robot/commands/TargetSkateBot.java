@@ -9,11 +9,19 @@ package frc.robot.commands;
 import frc.robot.OI;
 import frc.robot.lib.RioLogger;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TargetSkateBot extends Command {
-	private boolean m_LimelightHasValidTarget = false;
-	private double m_LimelightDriveCommand = 0.0;
-	private double m_LimelightSteerCommand = 0.0;
+	// These following constants are used in to compute distance to Target
+	private static double TARGET_HEIGHT = 50.0; // height of target from floor
+	private static double CAMERA_HEIGHT = 8.0;  // height of camera from floor
+	private static double CAMERA_ANGLE = 0.0;   // angle of camera from floor
+	private static double DISTANCE_TO_SLOW_DOWN = 24.0;
+
+	private boolean hasValidTarget = false;
+	private double driveCommand = 0.0;
+	private double steerCommand = 0.0;
+	private double targetDistance = 60.0; // Assume at least 5 feet away
 	private boolean ledsON = false;
 
 	public TargetSkateBot() {
@@ -33,13 +41,16 @@ public class TargetSkateBot extends Command {
 
 		// Driving
 		Update_Limelight_Tracking();
-		RioLogger.errorLog("Target identified is " + m_LimelightHasValidTarget);
-
-		double leftPwr = m_LimelightSteerCommand - m_LimelightDriveCommand;
-		double rightPwr = m_LimelightSteerCommand - m_LimelightDriveCommand;
+		RioLogger.errorLog("Target identified is " + hasValidTarget);
+		double leftPwr = driveCommand - steerCommand;
+		double rightPwr = driveCommand + steerCommand;
 		OI.driveTrain.setLeftPower(leftPwr);
-		OI.driveTrain.setRightPower(rightPwr);
-		OI.driveTrain.drive();
+		OI.driveTrain.setRightPower(rightPwr*-1.0);
+		SmartDashboard.putNumber("LimeLightSteer", steerCommand);
+		SmartDashboard.putNumber("LimelightDrive", driveCommand);
+		SmartDashboard.putNumber("Right Power", rightPwr);
+		SmartDashboard.putNumber("Left Power", leftPwr);
+		//OI.driveTrain.drive();
 	}
 
 
@@ -47,10 +58,10 @@ public class TargetSkateBot extends Command {
 	protected boolean isFinished() {
 		boolean stop = false;
 		// Stop when a) No target or b) Too close to the target
-		if (!m_LimelightHasValidTarget) {
+		if (!hasValidTarget) {
 			stop = true;
-		} else  {
-			// Code to check distance
+		} else  if (targetDistance < 5.0) {
+			stop = true;
 		}
 		return stop;
 	}
@@ -59,8 +70,8 @@ public class TargetSkateBot extends Command {
 	protected void end() {
 		OI.driveTrain.stop();
 		OI.limelight.turnOffLED();
+		ledsON = false;
 		RioLogger.errorLog("TargetSkateBot command finished.");
-		
 	}
 
 	/**
@@ -69,36 +80,53 @@ public class TargetSkateBot extends Command {
 	 */
 	public void Update_Limelight_Tracking() {
 		// These numbers must be tuned for your Robot! Be careful!
-		final double STEER_K = 0.03; // how hard to turn toward the target
-		final double DRIVE_K = 0.26; // how hard to drive fwd toward the target
+		// For testing make STEER_K = 0, no turning 
+		final double STEER_K = 0.0; // 0.03 how hard to turn toward the target
+		final double DRIVE_K = 1.0; // 0.26 how hard to drive fwd toward the target
 		final double DESIRED_TARGET_AREA = 13.0; // Area of the target when the robot reaches the wall
 		final double MAX_DRIVE = 0.7; // Simple speed limit so we don't drive too fast
 
 		boolean hasTgt = OI.limelight.hasTargets();
 		double tx = OI.limelight.x();
-		double ty = OI.limelight.y();
 		double ta = OI.limelight.targetArea();
 
 		if (!hasTgt) {
-			m_LimelightHasValidTarget = false;
-			m_LimelightDriveCommand = 0.0;
-			m_LimelightSteerCommand = 0.0;
+			hasValidTarget = false;
+			driveCommand = 0.0;
+			steerCommand = 0.0;
 			return;
 		}
 
-		m_LimelightHasValidTarget = true;
+		hasValidTarget = true;
 
 		// Start with proportional steering
 		double steer_cmd = tx * STEER_K;
-		m_LimelightSteerCommand = steer_cmd;
+		steerCommand = steer_cmd;
 
 		// try to drive forward until the target area reaches our desired area
-		double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
+		//double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
+		double dist = calculateDistance();
+		double drive_cmd = 0.0;
+		if (dist > 24.0) {
+			drive_cmd = MAX_DRIVE;
+		} else {
+			drive_cmd = dist * (MAX_DRIVE / DISTANCE_TO_SLOW_DOWN);
+		}
 
 		// don't let the robot drive too fast into the goal
 		if (drive_cmd > MAX_DRIVE) {
 			drive_cmd = MAX_DRIVE;
 		}
-		m_LimelightDriveCommand = drive_cmd;
+		driveCommand = drive_cmd;
+	}
+
+	private double calculateDistance(){
+		double ty = OI.limelight.y();
+		double heightDiff = TARGET_HEIGHT - CAMERA_HEIGHT;
+		double angle = ty + CAMERA_ANGLE;
+		double distance = heightDiff / Math.tan(angle);
+		targetDistance = distance;
+		SmartDashboard.putNumber("DistanceToTarget", targetDistance);
+		return distance;
 	}
 }

@@ -85,7 +85,7 @@ public class OI {
     // trigShifter.whenInactive(new ShiftLow());
     // btnRollerIn.whileHeld(new CargoRollerIn());
     // btnRollerOut.whileHeld(new CargoRollerOut());
-    // btnTargetRobot.whenPressed(new TargetSkateBot());
+     btnTargetRobot.whenPressed(new TargetSkateBot());
     // btnPanelHold.whenPressed(new PanelIntakeHoldPanel());
     // btnPanelRelease.whenPressed(new PanelIntakeReleasePanel());
     // btnWristStow.whenPressed(new WristStowed());
