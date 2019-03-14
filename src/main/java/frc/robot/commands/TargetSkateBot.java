@@ -83,13 +83,13 @@ public class TargetSkateBot extends Command {
 		// These numbers must be tuned for your Robot! Be careful!
 		// For testing make STEER_K = 0, no turning 
 		final double STEER_K = 0.0; // 0.03 how hard to turn toward the target
-		final double DRIVE_K = 1.0; // 0.26 how hard to drive fwd toward the target
-		final double DESIRED_TARGET_AREA = 13.0; // Area of the target when the robot reaches the wall
+		//final double DRIVE_K = 1.0; // 0.26 how hard to drive fwd toward the target
+		//final double DESIRED_TARGET_AREA = 13.0; // Area of the target when the robot reaches the wall
 
 		hasValidTarget = OI.limelight.hasTargets();
 		double ty = OI.limelight.y();
 		double tx = OI.limelight.x();
-		double ta = OI.limelight.targetArea();
+		//double ta = OI.limelight.targetArea();
 
 		if (!hasValidTarget) {
 			driveCommand = 0.0;
@@ -105,15 +105,11 @@ public class TargetSkateBot extends Command {
 		//double drive_cmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
 		calculateDistance(ty);
 		double drive_cmd = 0.0;
-		if (targetDistance > 24.0) {
+		if (targetDistance > DISTANCE_TO_SLOW_DOWN) {
 			drive_cmd = MAX_SPEED;
 		} else {
 			drive_cmd = targetDistance * (MAX_SPEED / DISTANCE_TO_SLOW_DOWN);
 		}
-		// don't let the robot drive too fast into the goal
-		// if (drive_cmd > MAX_SPEED) {
-		// 	drive_cmd = MAX_SPEED;
-		// }
 		driveCommand = drive_cmd;
 	}
 
