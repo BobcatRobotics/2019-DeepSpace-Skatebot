@@ -11,21 +11,22 @@ import frc.robot.lib.RioLogger;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveStraight extends Command {
-	private static double DRIVE_SPEED = 0.7;
-	private static double NBR_LOOPS = 40;
+	private static double DRIVE_SPEED = 0.2;
+	private static double NBR_LOOPS = 10;
 
 	private int loopNbr = 0;
 
 	public DriveStraight() {
 		super();
 		requires(OI.driveTrain);
+		loopNbr = 0;
 		RioLogger.errorLog("DriveStraight Command Initialized");
 	}
 
 	@Override
 	protected void execute() {
-		OI.driveTrain.setLeftPower(DRIVE_SPEED);
-		OI.driveTrain.setRightPower(DRIVE_SPEED * -1.0);
+		OI.driveTrain.setLeftPower(DRIVE_SPEED*-1.0);
+		OI.driveTrain.setRightPower(DRIVE_SPEED*-1.0);
 		OI.driveTrain.drive();
 		loopNbr++;
 	}
@@ -40,6 +41,7 @@ public class DriveStraight extends Command {
 	@Override
 	protected void end() {
 		OI.driveTrain.stop();
+		loopNbr = 0;
 		RioLogger.errorLog("DriveStraight command finished.");
 	}
 
