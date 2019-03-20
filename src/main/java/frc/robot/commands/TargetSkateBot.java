@@ -6,27 +6,26 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot.commands;
 
-import frc.robot.OI;
-import frc.robot.lib.RioLogger;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.OI;
+import frc.robot.lib.RioLogger;
+import frc.robot.lib.RioLoggerThread;
 
 public class TargetSkateBot extends Command {
-	private static double DISTANCE_TO_SLOW_DOWN = 24.0;
-	private static double MAX_SPEED = 0.7; // Drive Motor Limit. Used to cap the speed of the bot
 	private static double DESIRED_TARGET_AREA = 17; // Area of the target when the robot reaches the wall
-	private static double DRIVE_K = 0.75; // 0.26 how hard to drive fwd toward the target
-	private static double STEER_K = 0.01; // 0.03 how hard to turn toward the target
+	private static double DRIVE_K = 0.025; // hard to drive fwd toward the target
+	private static double STEER_K = 0.015; // how hard to turn toward the target
 
 	// The following fields are updated by the LimeLight Camera
 	private boolean hasValidTarget = false;
 	private double driveCommand = 0.0;
 	private double steerCommand = 0.0;
-	private double speedToTarget = 0.0;
 
 	// The following fields are updated by the state of the Command
 	private boolean ledsON = false;
 	private boolean isTargeting = false;
+	private Log log = new Log();
 
 	public TargetSkateBot() {
 		super();
@@ -42,32 +41,39 @@ public class TargetSkateBot extends Command {
 		if (!ledsON) {
 			OI.limelight.turnOnLED();
 			ledsON = true;
+			RioLogger.log("TargetSkateBot.execute() LED turned on");
 		}
 
 		// Driving
 		Update_Limelight_Tracking();
-		RioLogger.errorLog("Target identified is " + hasValidTarget);
-
 		double leftPwr = (driveCommand - steerCommand) * -1.0;
 		double rightPwr = (driveCommand + steerCommand) * -1.0;
 
 		OI.driveTrain.setLeftPower(leftPwr);
 		OI.driveTrain.setRightPower(rightPwr);
 		OI.driveTrain.drive();
+		SmartDashboard.putBoolean("Limelight.TargetIdentified", hasValidTarget);
 		SmartDashboard.putNumber("LimeLight.RightPower", rightPwr);
 		SmartDashboard.putNumber("LimeLight.LeftPower", leftPwr);
+
+		log.leftPwr = leftPwr;
+		log.rightPwr = rightPwr;
+		RioLoggerThread.log(log.logLine());
 	}
 
 	@Override
 	protected boolean isFinished() {
 		boolean stop = false;
-		if (isTargeting) {
-			if (!hasValidTarget) {
-				stop = true;
-			}
-			if (speedToTarget < 0.01) {
-				stop = true;
-			}
+		// if (isTargeting) {
+		// if (!hasValidTarget) {
+		// stop = true;
+		// }
+		// if (speedToTarget < 0.01) {
+		// stop = true;
+		// }
+		// }
+		if (OI.gamePad.getRawButton(3)) {
+			stop = true;
 		}
 		return stop;
 	}
@@ -96,26 +102,37 @@ public class TargetSkateBot extends Command {
 		// double ty = OI.limelight.y();
 		double tx = OI.limelight.x();
 		double ta = OI.limelight.targetArea();
+		log.tx = tx;
+		log.ta = ta;
 
 		// Start with proportional steering
 		steerCommand = tx * STEER_K;
 		SmartDashboard.putNumber("Limelight.SteerCommand", steerCommand);
 
 		// try to drive forward until the target area reaches our desired area
-		speedToTarget = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
-		SmartDashboard.putNumber("Limelight.SpeedToTarget", speedToTarget);
-
-		// Adjust Drive Speed, based on how close the bot is to the target
-		if (speedToTarget > DISTANCE_TO_SLOW_DOWN) {
-			driveCommand = MAX_SPEED;
-		} else {
-			driveCommand = speedToTarget * (MAX_SPEED / DISTANCE_TO_SLOW_DOWN);
-		}
+		driveCommand = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
 		SmartDashboard.putNumber("Limelight.DriveCommand", driveCommand);
+
+		log.drvCmd = driveCommand;
+		log.strCmd = steerCommand;
 	}
 
 	private void initializeCommand() {
 		ledsON = false;
 		isTargeting = false;
 	}
+
+	class Log {
+		double ta = 0.0;
+		double tx = 0.0;
+		double drvCmd = 0.0;
+		double strCmd = 0.0;
+		double leftPwr = 0.0;
+		double rightPwr = 0.0;
+
+		public String logLine() {
+			return String.format("%6.4f %6.4f %6.4f %6.4f %6.4f %6.4f", ta, tx, drvCmd, strCmd, leftPwr, rightPwr);
+		}
+	}
+
 }

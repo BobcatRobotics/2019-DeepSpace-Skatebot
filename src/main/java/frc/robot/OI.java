@@ -17,8 +17,8 @@ import frc.robot.commands.*;
  */
 public class OI {
   // Loggers
-  public static RioLoggerThread logFile;
-  public static SmartDashLog smartLog = new SmartDashLog();
+  //public static RioLoggerThread logFile;
+  //public static SmartDashLog smartLog = new SmartDashLog();
 
   // Drive Chain Subsystem
   // Competition and Practive Bot

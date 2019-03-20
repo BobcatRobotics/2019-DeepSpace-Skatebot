@@ -11,8 +11,8 @@ import frc.robot.lib.RioLogger;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveStraight extends Command {
-	private static double DRIVE_SPEED = 0.2;
-	private static double NBR_LOOPS = 10;
+	private static double DRIVE_SPEED = 0.25;
+	private static double NBR_LOOPS = 25;
 
 	private int loopNbr = 0;
 
