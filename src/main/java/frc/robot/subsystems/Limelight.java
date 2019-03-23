@@ -22,6 +22,10 @@ public class Limelight extends Subsystem {
     private NetworkTableEntry tx = null;
     private NetworkTableEntry ty = null;
     private NetworkTableEntry ta = null;
+    private NetworkTableEntry ta0 = null;
+    private NetworkTableEntry ts0 = null;
+    private NetworkTableEntry ta1 = null;
+    private NetworkTableEntry ts1 = null;
 
     public Limelight() {
     }
@@ -34,6 +38,10 @@ public class Limelight extends Subsystem {
             tx = table.getEntry("tx");
             ty = table.getEntry("ty");
             ta = table.getEntry("ta");
+            ta0 = table.getEntry("ta0");
+            ts0 = table.getEntry("ts0");
+            ta1 = table.getEntry("ta1");
+            ts1 = table.getEntry("ts1");
         } catch (Exception e) {
             RioLogger.errorLog("Unable to initialize LimeLight. Error is " + e);
             return;
@@ -76,6 +84,22 @@ public class Limelight extends Subsystem {
         }
         return dArea;
      }
+
+     public double targetArea(int target) {
+         double tgtArea = ta0.getDouble(0.0);
+         if (target == 1) {
+             tgtArea = ta1.getDouble(0.0);
+         }
+         return tgtArea;
+     }
+
+     public double targetSkew(int target) {
+        double targetSkew = ts0.getDouble(0.0);
+        if (target == 1) {
+            targetSkew = ts1.getDouble(0.0);
+        }
+        return targetSkew;
+    }
 
      public void turnOnLED() {
         lightLED(LimelightLED.ON);

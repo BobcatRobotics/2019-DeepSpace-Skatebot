@@ -13,12 +13,20 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
  * Add your docs here.
  */
 public class LimelightPID extends PIDSubsystem {
+  private Limelight limelight = new Limelight();
+  private static double P = 1.0;
+  private static double I = 0.01;
+  private static double D = 0.025;
+
+  // This value needs to be set based on the area the BOT
+  // sees when it is on the target
+  private double TARGET_AREA = 6.0;
   /**
    * Add your docs here.
    */
   public LimelightPID() {
     // Intert a subsystem name and PID values here
-    super("SubsystemName", 1, 2, 3);
+    super("LimeLightTracker", P, I, D);
     // Use these to get going:
     // setSetpoint() - Sets where the PID controller should move the system
     // to

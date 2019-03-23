@@ -14,7 +14,7 @@ import frc.robot.lib.RioLoggerThread;
 
 public class TargetBot extends Command {
 	private static double DESIRED_TARGET_AREA = 17; // Area of the target when the robot reaches the wall
-	private static double DRIVE_K = 0.025; // how hard to drive fwd toward the target
+	private static double DRIVE_K = 0.045; // how hard to drive fwd toward the target
 	private static double STEER_K = 0.015; // how hard to turn toward the target
 	private static double X_OFFSET = 4.5;  // The number of degrees camera is off center
 
@@ -47,9 +47,18 @@ public class TargetBot extends Command {
 
 		// Driving
 		Update_Limelight_Tracking();
+		double ta0 = OI.limelight.targetArea(0);
+		double ta1 = OI.limelight.targetArea(1);
+
 		double leftPwr = (driveCommand - steerCommand) * -1.0;
 		double rightPwr = (driveCommand + steerCommand) * -1.0;
-
+		if (Math.abs(ta0 - ta1) > 0.05) {
+			if (ta0 > ta1)
+				rightPwr += 0.25;
+			else
+				leftPwr += 0.25;
+		}
+	
 		OI.driveTrain.setLeftPower(leftPwr);
 		OI.driveTrain.setRightPower(rightPwr);
 		OI.driveTrain.drive();
@@ -105,6 +114,10 @@ public class TargetBot extends Command {
 		double ta = OI.limelight.targetArea();
 		log.tx = tx;
 		log.ta = ta;
+		log.ta0 = OI.limelight.targetArea(0);
+		log.ta1 = OI.limelight.targetArea(1);
+		log.ts0 = OI.limelight.targetSkew(0);
+		log.ts1 = OI.limelight.targetSkew(1);
 
 		// Start with proportional steering
 		steerCommand = (tx - X_OFFSET) * STEER_K;
@@ -126,13 +139,18 @@ public class TargetBot extends Command {
 	class Log {
 		double ta = 0.0;
 		double tx = 0.0;
+		double ta0 = 0.0;
+		double ta1 = 0.0;
+		double ts0 = 0.0;
+		double ts1 = 0.0;
 		double drvCmd = 0.0;
 		double strCmd = 0.0;
 		double leftPwr = 0.0;
 		double rightPwr = 0.0;
 
 		public String logLine() {
-			return String.format("%6.4f %6.4f %6.4f %6.4f %6.4f %6.4f", ta, tx, drvCmd, strCmd, leftPwr, rightPwr);
+			return String.format("%6.4f %6.4f %6.4f %6.4f %6.4f %6.4f %6.4f %6.4f %6.4f %6.4f"
+			, ta, tx, ta0, ta1, ts0,ts1,drvCmd, strCmd, leftPwr, rightPwr);
 		}
 	}
 }
