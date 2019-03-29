@@ -86,8 +86,8 @@ public class Robot extends TimedRobot {
       m_DriveWithJoysticks.start();
       // m_MoveElevator.start();
       // m_RunWrist.start();
-
-      commandsStarted = true;
+      // For testing always have joysticks available
+      commandsStarted = /*true*/ false;
     }
   }
 }
