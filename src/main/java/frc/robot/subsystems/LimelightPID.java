@@ -9,28 +9,46 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
-/**
- * Add your docs here.
- */
 public class LimelightPID extends PIDSubsystem {
   private Limelight limelight = new Limelight();
-  private static double P = 1.0;
-  private static double I = 0.01;
-  private static double D = 0.025;
+  // private static double P = 1.0;
+  // private static double I = 0.01;
+  // private static double D = 0.025;
 
   // This value needs to be set based on the area the BOT
   // sees when it is on the target
-  private double TARGET_AREA = 6.0;
-  /**
-   * Add your docs here.
-   */
-  public LimelightPID() {
-    // Intert a subsystem name and PID values here
+  private double tgt_area = 0.0;
+  private double driveSpeed = 0.0;
+  
+ 
+  public LimelightPID(double P, double I, double D, double target_area) {
     super("LimeLightTracker", P, I, D);
-    // Use these to get going:
-    // setSetpoint() - Sets where the PID controller should move the system
-    // to
-    // enable() - Enables the PID controller.
+    setInputRange(0.0, target_area);
+    setOutputRange(0.0, 1.0);
+    this.tgt_area = target_area;
+  }
+
+  public void start() {
+    enable();
+  }
+
+  public void stop() {
+    disable();
+  }
+
+  public double getDriveSpeed() {
+    return this.driveSpeed;
+  }
+
+  @Override
+  protected double returnPIDInput() {
+    double ta = limelight.targetArea();
+    return ta;
+  }
+
+  @Override
+  protected void usePIDOutput(double output) {
+    driveSpeed = output;
   }
 
   @Override
@@ -39,17 +57,4 @@ public class LimelightPID extends PIDSubsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  @Override
-  protected double returnPIDInput() {
-    // Return your input value for the PID loop
-    // e.g. a sensor, like a potentiometer:
-    // yourPot.getAverageVoltage() / kYourMaxVoltage;
-    return 0.0;
-  }
-
-  @Override
-  protected void usePIDOutput(double output) {
-    // Use output to drive your system, like a motor
-    // e.g. yourMotor.set(output);
-  }
 }

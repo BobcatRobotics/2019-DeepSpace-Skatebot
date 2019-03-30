@@ -56,7 +56,7 @@ public class OI {
   // Camera
   //public static Camera camera = new Camera();
   public static Limelight limelight = new Limelight();
-
+ 
   // Buttons
  // public static Button btnRollerIn = new JoystickButton(gamePad, RobotMap.cargoInB);
   //public static Button btnRollerOut = new JoystickButton(gamePad, RobotMap.cargoOutB);
@@ -87,9 +87,12 @@ public class OI {
     // trigShifter.whenInactive(new ShiftLow());
     // btnRollerIn.whileHeld(new CargoRollerIn());
     // btnRollerOut.whileHeld(new CargoRollerOut());
-    btnTargetRobot.whenPressed(new TargetBot());
+
+    //btnTargetRobot.whenPressed(new TargetBot());
+    btnTargetRobot.whenPressed(new TargetPIDBot());
     btnDriveStraight.whenPressed(new DriveStraight());
     btnToggleLED.whenPressed(new ToggleLimeLight());
+
     // btnPanelHold.whenPressed(new PanelIntakeHoldPanel());
     // btnPanelRelease.whenPressed(new PanelIntakeReleasePanel());
     // btnWristStow.whenPressed(new WristStowed());

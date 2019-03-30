@@ -9,6 +9,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.OI;
+import frc.robot.lib.LimelightLogger;
 import frc.robot.lib.RioLogger;
 import frc.robot.lib.RioLoggerThread;
 
@@ -31,14 +32,14 @@ public class TargetAdjustBot extends Command {
 	// The following fields are updated by the state of the Command
 	private boolean ledsON = false;
 	private boolean isTargeting = false;
-	private Log log = new Log();
+	private LimelightLogger log = new LimelightLogger();
 
 	public TargetAdjustBot() {
 		super();
 		requires(OI.driveTrain);
 		requires(OI.limelight);
 		initializeCommand();
-		RioLogger.errorLog("TargetSkatebot Command Initialized");
+		RioLogger.errorLog("TargetAdjustBot Command Initialized");
 	}
 
 	@Override
@@ -47,14 +48,12 @@ public class TargetAdjustBot extends Command {
 		if (!ledsON) {
 			OI.limelight.turnOnLED();
 			ledsON = true;
-			RioLogger.log("TargetSkateBot.execute() LED turned on");
+			RioLogger.log("TargetAdjustBot.execute() LED turned on");
 		}
 
 		// Driving
 		Update_Limelight_Tracking();
-		double ta0 = OI.limelight.targetArea(0);
-		double ta1 = OI.limelight.targetArea(1);
-
+	
 		double leftPwr = (driveCommand - steerCommand) * -1.0;
 		double rightPwr = (driveCommand + steerCommand) * -1.0;
 		// if (Math.abs(ta0 - ta1) > 0.05) {
@@ -71,8 +70,11 @@ public class TargetAdjustBot extends Command {
 		SmartDashboard.putNumber("LimeLight.RightPower", rightPwr);
 		SmartDashboard.putNumber("LimeLight.LeftPower", leftPwr);
 
+		log.drvCmd = driveCommand;
+		log.strCmd = steerCommand;
 		log.leftPwr = leftPwr;
 		log.rightPwr = rightPwr;
+		log.logCurrent();
 		RioLoggerThread.log(log.logLine());
 	}
 
@@ -100,7 +102,7 @@ public class TargetAdjustBot extends Command {
 	protected void end() {
 		OI.driveTrain.stop();
 		OI.limelight.turnOffLED();
-		RioLogger.errorLog("TargetSkateBot command finished.");
+		RioLogger.errorLog("TargetAdjustBot command finished.");
 		initializeCommand();
 	}
 
@@ -120,15 +122,8 @@ public class TargetAdjustBot extends Command {
 		// double ty = OI.limelight.y();
 		double tx = OI.limelight.x();
 		double ta = OI.limelight.targetArea();
-		log.tx = tx;
-		log.ta = ta;
-		log.ta0 = OI.limelight.targetArea(0);
-		log.ta1 = OI.limelight.targetArea(1);
-		log.ts0 = OI.limelight.targetSkew(0);
-		log.ts1 = OI.limelight.targetSkew(1);
 
 		// Start with proportional steering
-		
 		steerCommand = (tx - X_OFFSET) * STEER_K;
 		SmartDashboard.putNumber("Limelight.SteerCommand", steerCommand);
 
@@ -144,31 +139,10 @@ public class TargetAdjustBot extends Command {
 		RioLogger.errorLog("Drive Error:" + driveIntegral + "Actual Drive Error: " + driveIntegral * DRIVE_I);
 		driveCommand = DRIVE_K*distanceError + driveIntegral * DRIVE_I;
 		SmartDashboard.putNumber("Limelight.DriveCommand", driveCommand);
-
-		log.drvCmd = driveCommand;
-		log.strCmd = steerCommand;
 	}
 
 	private void initializeCommand() {
 		ledsON = false;
 		isTargeting = false;
-	}
-
-	class Log {
-		double ta = 0.0;
-		double tx = 0.0;
-		double ta0 = 0.0;
-		double ta1 = 0.0;
-		double ts0 = 0.0;
-		double ts1 = 0.0;
-		double drvCmd = 0.0;
-		double strCmd = 0.0;
-		double leftPwr = 0.0;
-		double rightPwr = 0.0;
-
-		public String logLine() {
-			return String.format("%6.4f %6.4f %6.4f %6.4f %6.4f %6.4f %6.4f %6.4f %6.4f %6.4f"
-			, ta, tx, ta0, ta1, ts0,ts1,drvCmd, strCmd, leftPwr, rightPwr);
-		}
 	}
 }
