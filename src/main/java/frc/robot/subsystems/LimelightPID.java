@@ -23,8 +23,10 @@ public class LimelightPID extends PIDSubsystem {
  
   public LimelightPID(double P, double I, double D, double target_area) {
     super("LimeLightTracker", P, I, D);
+    setSetpoint(target_area);
     setInputRange(0.0, target_area);
     setOutputRange(0.0, 1.0);
+    setPercentTolerance(1.0);
     this.tgt_area = target_area;
   }
 
@@ -42,8 +44,7 @@ public class LimelightPID extends PIDSubsystem {
 
   @Override
   protected double returnPIDInput() {
-    double ta = limelight.targetArea();
-    return ta;
+    return limelight.targetArea();
   }
 
   @Override

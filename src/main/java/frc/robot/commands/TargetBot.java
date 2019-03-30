@@ -85,22 +85,26 @@ public class TargetBot extends Command {
 
 		log.leftPwr = leftPwr;
 		log.rightPwr = rightPwr;
+		log.logCurrent();
 		RioLoggerThread.log(log.logLine());
 	}
 
 	@Override
 	protected boolean isFinished() {
 		boolean stop = false;
-		if (isTargeting) {
-			if (!hasValidTarget) {
-				stop = true;
-				RioLogger.errorLog("TargetSkateBot isFinished stopping. No target");
-			}
-		}
+		// if (isTargeting) {
+		// 	if (!hasValidTarget) {
+		// 		stop = true;
+		// 		RioLogger.errorLog("TargetSkateBot isFinished stopping. No target");
+		// 	}
+		// }
 		if (OI.gamePad.getRawButton(3)) {
+			RioLogger.errorLog("TargetSkateBot isFinished stopping. button pressed");
+
 			stop = true;
 		}
 		if(OI.limelight.targetArea() > DESIRED_TARGET_AREA){
+			RioLogger.errorLog("TargetSkateBot isFinished stopping > TargetArea");
 			stop = true;
 		}
 		return stop;
