@@ -65,7 +65,7 @@ public class DriveTrainSkatebot extends Subsystem {
 		else
 			rightPwr *= INVERT_MOTOR;
 		
-		double scale = 0.5;
+		double scale = 0.7;
 		leftFront.set(leftPwr * scale);
 		rightFront.set(rightPwr * scale);
 	}

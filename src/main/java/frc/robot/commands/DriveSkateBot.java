@@ -21,21 +21,65 @@ public class DriveSkateBot extends Command {
 	@Override
 	protected void execute() {
 		// Driving
-		double left = OI.gamePad.getRawAxis(Joystick.AxisType.kY.value);
-		double right = OI.gamePad.getRawAxis(Joystick.AxisType.kTwist.value);
+		double right = OI.gamePad.getRawAxis(Joystick.AxisType.kY.value);
+		double left = OI.gamePad.getRawAxis(Joystick.AxisType.kTwist.value);
+
+		//Making the controls like Forza
+		//double reverse = OI.gamePad.getRawAxis(3);
+		//double forward = OI.gamePad.getRawAxis(2);
+		//double turn = OI.gamePad.getRawAxis(Joystick.AxisType.kX.value);
+		double leftPower = 0.0;
+		double rightPower = 0.0;
+
 		if (Math.abs(right) < 0.02) {
 			right = 0.0;
-			//done to prevent motor wear, in case of joystick doesn't center
+			//forward = 0.0;
+			//done to prevent motor wear, in case joystick doesn't center
 		}
 
 		if (Math.abs(left) < 0.02) {
 			left = 0.0;
-			//done to prevent motor wear, in case of joystick doesn't center
+			//reverse = 0.0;
+			//done to prevent motor wear, in case joystick doesn't center
 		}
 
-		//DriverStation.reportError("left stick value: " + left + " right stick value " + right, false);
-		OI.driveTrain.setLeftPower(left);
-		OI.driveTrain.setRightPower(right);
+		/* if (Math.abs(turn) < 0.2) {
+			turn = 0.0;
+			//done to prevent motor wear, in case joystick doesn't center
+		} */
+		
+		// reverse = -1 * reverse;
+
+		// double power = forward + reverse;
+		//rightPower = power;
+		//leftPower = power;
+
+		rightPower = left;
+		leftPower = right;
+
+		// if (power > 0.0) {
+		// 	if (turn < 0.0) {
+		// 		leftPower -= turn;
+		// 	} else if (turn > 0.0) {
+		// 		rightPower += turn;
+		// 	}	
+		// } else if (power < 0.0) {
+		// 	if (turn < 0.0) {
+		// 		rightPower += turn;
+		// 	} else if (turn > 0.0) {
+		// 		leftPower -= turn;
+		// 	}
+		// } else {
+		// 	if (turn < 0.0) {
+		// 		rightPower += turn;
+		// 	} else if (turn > 0.0) {
+		// 		leftPower -= turn;
+		// 	}
+		// }
+		
+
+		OI.driveTrain.setLeftPower(rightPower);
+		OI.driveTrain.setRightPower(leftPower);
 		OI.driveTrain.drive();
 	}
 
