@@ -17,8 +17,8 @@ import frc.robot.commands.*;
  */
 public class OI {
   // Loggers
-  public static RioLoggerThread logFile;
-  public static SmartDashLog smartLog = new SmartDashLog();
+  //public static RioLoggerThread logFile;
+  //public static SmartDashLog smartLog = new SmartDashLog();
 
   // Drive Chain Subsystem
   // Competition and Practive Bot
@@ -45,7 +45,7 @@ public class OI {
  // public static PanelIntake panel = new PanelIntake();
 
   //Cargo Roller
-  public static CargoRoller cargo = new CargoRoller();
+  // public static CargoRoller cargo = new CargoRoller();
 
   //Peg leg
   //public static PegLeg pegleg = new PegLeg();
@@ -54,11 +54,15 @@ public class OI {
   //public static Lock lock = new Lock();
 
   // Camera
-  public static Camera camera = new Camera();
-
+  //public static Camera camera = new Camera();
+  public static Limelight limelight = new Limelight();
+ 
   // Buttons
-  public static Button btnRollerIn = new JoystickButton(gamePad, RobotMap.cargoInB);
-  public static Button btnRollerOut = new JoystickButton(gamePad, RobotMap.cargoOutB);
+ // public static Button btnRollerIn = new JoystickButton(gamePad, RobotMap.cargoInB);
+  //public static Button btnRollerOut = new JoystickButton(gamePad, RobotMap.cargoOutB);
+  public static Button btnTargetRobot = new JoystickButton(gamePad, 2);
+  public static Button btnDriveStraight = new JoystickButton(gamePad, 1);
+  public static Button btnToggleLED = new JoystickButton(gamePad, 4);
   // public static Button btnPanelHold = new JoystickButton(gamePad, RobotMap.panelHoldB);
   // public static Button btnPanelRelease = new JoystickButton(gamePad, RobotMap.panelReleaseB);
   // public static Button btnWristStow = new JoystickButton(gamePad, RobotMap.wristStowB);
@@ -75,12 +79,20 @@ public class OI {
     // Start Logging Thread
     // logFile = RioLoggerThread.getInstance();
     // Initialize Camera
-    camera.initializeCamera();
+   // camera.initializeCamera();
+   limelight.initializeLimeLight();
+   RioLogger.errorLog("limeLight camera is initialized.");
 
     // trigShifter.whenActive(new ShiftHigh());
     // trigShifter.whenInactive(new ShiftLow());
-    btnRollerIn.whileHeld(new CargoRollerIn());
-    btnRollerOut.whileHeld(new CargoRollerOut());
+    // btnRollerIn.whileHeld(new CargoRollerIn());
+    // btnRollerOut.whileHeld(new CargoRollerOut());
+
+    //btnTargetRobot.whenPressed(new TargetBot());
+    btnTargetRobot.whenPressed(new TargetPIDBot());
+    btnDriveStraight.whenPressed(new DriveStraight());
+    btnToggleLED.whenPressed(new ToggleLimeLight());
+
     // btnPanelHold.whenPressed(new PanelIntakeHoldPanel());
     // btnPanelRelease.whenPressed(new PanelIntakeReleasePanel());
     // btnWristStow.whenPressed(new WristStowed());
@@ -89,6 +101,7 @@ public class OI {
     // lockAndPegTrigger.whenActive(new LockEnable());
     // lockAndPegTrigger.whenInactive(new LockDisable());
     // btnPanelInOutToggle.whenPressed(new PanelIntakeInOutToggle());
+
     RioLogger.log("OI static block finished.");
   }
 }

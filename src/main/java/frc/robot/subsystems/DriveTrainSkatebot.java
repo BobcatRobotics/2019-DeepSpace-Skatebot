@@ -65,7 +65,13 @@ public class DriveTrainSkatebot extends Subsystem {
 		else
 			rightPwr *= INVERT_MOTOR;
 		
+<<<<<<< HEAD
 		double scale = 0.7;
+=======
+		// TODO:: The following is to slow down scate bot
+		// TODO:: Remove????
+		double scale = 1.0 /*0.5*/;
+>>>>>>> 8af7f2a6fcde1db5fd443f9914a4dbe7e2f38f17
 		leftFront.set(leftPwr * scale);
 		rightFront.set(rightPwr * scale);
 	}

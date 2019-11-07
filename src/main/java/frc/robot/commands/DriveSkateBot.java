@@ -8,7 +8,7 @@
 package frc.robot.commands;
 
 import frc.robot.OI;
-
+import frc.robot.lib.RioLogger;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -16,6 +16,8 @@ public class DriveSkateBot extends Command {
 	
 	public DriveSkateBot() {
 		super();
+		requires(OI.driveTrain);
+		RioLogger.errorLog("DriveSkateBot Command Initialized");
 	}
 
 	@Override
@@ -42,6 +44,7 @@ public class DriveSkateBot extends Command {
 			//reverse = 0.0;
 			//done to prevent motor wear, in case joystick doesn't center
 		}
+<<<<<<< HEAD
 
 		/* if (Math.abs(turn) < 0.2) {
 			turn = 0.0;
@@ -80,6 +83,14 @@ public class DriveSkateBot extends Command {
 
 		OI.driveTrain.setLeftPower(rightPower);
 		OI.driveTrain.setRightPower(leftPower);
+=======
+		// Scaling factor to reduce speed translated from joysticks
+		left *= 0.35;
+		right *= 0.35;
+		//DriverStation.reportError("left stick value: " + left + " right stick value " + right, false);
+		OI.driveTrain.setLeftPower(left);
+		OI.driveTrain.setRightPower(right);
+>>>>>>> 8af7f2a6fcde1db5fd443f9914a4dbe7e2f38f17
 		OI.driveTrain.drive();
 	}
 
@@ -92,5 +103,11 @@ public class DriveSkateBot extends Command {
 	@Override
 	protected void end() {
 		OI.driveTrain.stop();
+		RioLogger.errorLog("DriveSkateBot Command end()");
+	}
+
+	@Override
+	protected void interrupted() {
+	  RioLogger.errorLog("DriveSkateBot interrupted");
 	}
 }
