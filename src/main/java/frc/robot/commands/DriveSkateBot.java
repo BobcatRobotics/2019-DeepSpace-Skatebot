@@ -44,7 +44,6 @@ public class DriveSkateBot extends Command {
 			//reverse = 0.0;
 			//done to prevent motor wear, in case joystick doesn't center
 		}
-<<<<<<< HEAD
 
 		/* if (Math.abs(turn) < 0.2) {
 			turn = 0.0;
@@ -83,14 +82,6 @@ public class DriveSkateBot extends Command {
 
 		OI.driveTrain.setLeftPower(rightPower);
 		OI.driveTrain.setRightPower(leftPower);
-=======
-		// Scaling factor to reduce speed translated from joysticks
-		left *= 0.35;
-		right *= 0.35;
-		//DriverStation.reportError("left stick value: " + left + " right stick value " + right, false);
-		OI.driveTrain.setLeftPower(left);
-		OI.driveTrain.setRightPower(right);
->>>>>>> 8af7f2a6fcde1db5fd443f9914a4dbe7e2f38f17
 		OI.driveTrain.drive();
 	}
 

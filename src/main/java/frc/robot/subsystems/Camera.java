@@ -30,13 +30,8 @@ public class Camera extends Subsystem {
         // CameraServer inst = CameraServer.getInstance();
         // CameraFileReader camReader = new CameraFileReader();
         
-<<<<<<< HEAD
         // m_visionThread = new Thread(() -> {
         //     CameraConfig config = null;
-=======
-//m_visionThread = new Thread(() -> {
-            CameraConfig config = null;
->>>>>>> 8af7f2a6fcde1db5fd443f9914a4dbe7e2f38f17
 
         //     if (readJSONFile) {
         //         RioLogger.log("Reading Camera JSON File");
@@ -62,13 +57,8 @@ public class Camera extends Subsystem {
         //         server.setConfigJson(config.getStreamConfig());
         //     }
 
-<<<<<<< HEAD
         //     RioLogger.log("Starting camera '" + name + "' on " + path);
         //     RioLogger.log("Camera settings:" + cameraValues(camera));
-=======
-            RioLogger.log("Starting camera '" + name + "' on " + path);
-            //RioLogger.log("Camera settings:" + cameraValues(camera));
->>>>>>> 8af7f2a6fcde1db5fd443f9914a4dbe7e2f38f17
 
         //     while (!Thread.interrupted()) {
 
